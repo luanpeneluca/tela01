@@ -1,0 +1,898 @@
+@charset "UTF-8";
+
+* {
+
+    font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+    margin: 0;
+    padding: 0;
+
+    --verde: #002D18;
+
+    /* border: 1px red dashed; */
+}
+
+body {
+    width: 100vw;
+    overflow-x: hidden;
+}
+
+body::-webkit-scrollbar {
+    display: none;
+}
+
+
+div.sales {
+    height: 40px;
+
+    color: var(--verde);
+    display: flex;
+
+    align-items: center;
+    justify-content: center;
+
+}
+
+div.sales > a {
+    color: var(--verde) ;
+    text-decoration: none;
+    margin-left: 4px;
+}
+
+div.sales > a:hover {
+    text-decoration: underline;
+}
+
+header {
+    background-color: #002D18;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+#idBuscar {
+    width: 70vw;
+    height: 35px;
+    border-radius: 25px;
+    border: none;
+}
+
+#labelBuscar {
+    color: gray;
+    position: absolute;
+    left: 26vw;
+}
+
+nav {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    width: 1920px;
+
+    height: 50px;
+    background-color: var(--verde);
+
+}
+
+nav > a {
+    padding: 0px 10px;
+    color: white;
+    text-decoration: none;
+}
+
+nav > a:hover {
+    background-color: white;
+    color: var(--verde);
+    height: 50px;
+    transition: 0.5s;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+#tipos {
+    display: grid;
+    grid-template-columns: repeat(6, 320px);
+    width: 1920px;
+}
+
+
+
+.tipos > img {
+    width: 320px;
+}
+
+.tipos > a {
+    color: white;
+    background-color: rgba(0, 0, 0, 0.507);
+    text-decoration: none;
+    font-size: 30px;
+
+    width: 320px;
+    height: 70px;
+
+    position: absolute;
+    text-align: center;
+    padding-top: 143px;
+
+}
+
+.tipos > a:hover {
+    background-color: rgba(255, 255, 255, 0.555);
+    color: var(--verde);
+    transition: 0.3s;
+}
+
+#poloNav{
+    display: block;
+    margin: auto;
+
+    padding: 10px 0px 0px 0px;
+    width: 1500px;
+
+}
+
+#poloNav > a {
+    font-size: 18px;
+    color: var(--verde);
+    padding-right: 10px;
+    text-decoration: none;
+}
+
+#poloNav > a:hover {
+    text-decoration: underline;
+}
+
+#polos {
+    display: flex;
+    margin: auto;
+    align-items: center;
+    width: 1500px;
+    height: 100px;
+}
+
+#polos > h1 {
+    color: var(--verde);
+    font-size: 50px;
+}
+
+#vitrine{
+    display: grid;
+    grid-template-columns: repeat(4, 450px);
+
+    margin: 0px 60px;
+    width: 1800px;
+    height: 1000px;
+
+}
+
+.produto {
+    width: 450px;
+    height: 500px;
+
+}
+
+.foto{
+    background-size: 450px 450px;
+    width: 450px;
+    height: 450px;
+
+}
+
+.foto > a {
+    width: 450px;
+    height: 450px;
+}
+
+.produto > a > .foto {
+    width: 450px;
+    height: 450px;
+
+    overflow: hidden;
+
+}
+
+.etiqueta {
+    width: 425px;
+    height: 25px;
+
+    font-size: 17px;
+    padding-left: 25px;
+    color: var(--verde);
+
+    display: flex;
+    align-items: center;
+    justify-content: left;
+
+}
+
+.etiqueta > a {
+    text-decoration: none;
+    color: var(--verde);
+}
+
+.etiqueta > a:hover {
+    text-decoration: underline;
+}
+
+.preco {
+    width: 425px;
+    height: 25px;
+
+    font-size: 18px;
+    padding-left: 25px;
+    color: var(--verde);
+
+    display: flex;
+    align-items: center;
+    justify-content: left;
+
+}
+
+#foto1 {
+    background-image: url(images/vitrine/poloBlack/L1212_031_20.avif);
+}
+
+#foto1:hover {
+    background-image: url(images/vitrine/poloBlack/L1212_031_24.avif);
+
+    transition: 0.3s;
+}
+
+#foto2 {
+    background-image: url(images/vitrine/poloWhite/L1212_001_20.avif);
+}
+
+#foto2:hover {
+    background-image: url(images/vitrine/poloWhite/L1212_001_24.avif);
+
+    transition: 0.3s;
+}
+
+#foto3 {
+    background-image: url(images/vitrine/poloBlue/L1212_166_20.avif);
+}
+
+#foto3:hover {
+    background-image: url(images/vitrine/poloBlue/L1212_166_24.avif);
+
+    transition: 0.3s;
+}
+
+#foto4 {
+    background-image: url(images/vitrine/poloGolfClassic/DH1093_YZP_20.avif);
+}
+
+#foto4:hover {
+    background-image: url(images/vitrine/poloGolfClassic/DH1093_YZP_24.avif);
+
+    transition: 0.5s;
+}
+
+#foto5 {
+    background-image: url(images/vitrine/poloGolfClassicWhite/DH1093_70V_20.avif);
+}
+
+#foto5:hover {
+    background-image: url(images/vitrine/poloGolfClassicWhite/DH1093_70V_24.avif);
+
+    transition: 0.5s;
+}
+
+#foto6 {
+    background-image: url(images/vitrine/poloGolfClubBlue/DH4611_JIK_24.avif);
+
+}
+
+#foto7{
+    background-image: url(images/vitrine/poloPoliesterReciclado/DH5175_QBI_20.avif);
+}
+
+#foto7:hover {
+    background-image: url(images/vitrine/poloPoliesterReciclado/DH5175_QBI_24.avif);
+
+    transition: 0.5s;
+}
+
+#foto8 {
+    background-image: url(images/vitrine/poloRegularFit/DH1082_MIQ_20.avif);
+}
+
+#foto8:hover {
+    background-image: url(images/vitrine/poloRegularFit/DH1082_MIQ_24.avif);
+}
+
+#infoLacoste {
+    margin: 50px auto;
+    padding: 30px;
+
+    width: 1500px;
+    height: 300px;
+
+    color: var(--verde);
+}
+
+#infoLacoste > h1 {
+    text-align: center;
+    font-size: 20px;
+}
+
+#infoLacoste > p {
+    text-align: center;
+    font-size: 13px;
+}
+
+#infoLacoste > p > a {
+    color: var(--verde);
+}
+
+footer {
+    width: 1920px;
+    height: 600px;
+
+    background-color: var(--verde);
+}
+
+#gridFooter {
+    width: 1400px;
+    height: 100px;
+    margin: auto;
+    display: grid;
+    grid-template-columns: repeat(4, 350px);
+
+
+}
+
+.footerTop {
+    display: block;
+    margin: auto;
+}
+
+.footerTop > img {
+    display: block;
+    margin: auto;
+}
+
+.footerTop > p {
+    color: white;
+}
+
+#gridMiddle {
+    display: grid;
+    grid-template-columns: 600px 1320px;
+    border: 1px solid white;
+
+}
+
+#clubLacoste {
+    width: 600px;
+    height: 500px;
+
+
+}
+
+#club {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-right: 1px solid white;
+
+    height: 300px;
+
+}
+
+#club > p {
+    color: white;
+    padding: 15px;
+    font-size: 14px;
+}
+
+#email {
+    display: grid;
+    grid-template-columns: 200px 400px;
+    height: 100px;
+    border: 1px solid white;
+}
+
+#emailText > p {
+    color: white;
+    font-size: 20px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    width: 200px;
+    height: 100px;
+
+}
+
+#emailButton {
+    display: inline-flex;
+    border-left: 1px solid white;
+}
+
+#emailButton > label {
+    top: 50%;
+    left: -80%;
+    transform: translate(-30%, -10%);
+    position: relative;
+    color: gray;
+}
+
+#idEmail {
+    height: 95px;
+    width: 350px;
+    background-color: var(--verde);
+    border: none;
+}
+
+#inscreverse > button{
+    width: 600px;
+    height: 97px;
+}
+
+#about {
+    margin: auto;
+    display: grid;
+    grid-template-columns: repeat(4, 250px);
+    padding: 50px 0px;
+    width: 1000px;
+    height: 400px;
+}
+
+.sobre {
+    display: block;
+
+}
+
+.sobre, .loja, .contato > h2 {
+    color: white;
+    padding: 10px 0px;
+}
+
+.sobre > a > p {
+    padding: 7px 0px;
+    font-size: 13px;
+}
+
+.sobre > a {
+    color: white;
+    text-decoration: none;
+}
+
+.sobre > a:hover {
+    text-decoration: underline;
+}
+
+.loja > a > p {
+    padding: 7px 0px;
+    font-size: 13px;
+}
+
+.loja > a {
+    color: white;
+    text-decoration: none;
+}
+
+.loja > a:hover {
+    text-decoration: underline;
+}
+
+.contato > p {
+    font-size: 12px;
+    color: white;
+    text-decoration: none;
+}
+
+.contato > a > p {
+    padding: 7px 0px;
+    font-size: 15px;
+}
+
+.contato > a {
+    color: white;
+    text-decoration: none;
+}
+
+.contato > a:hover {
+    text-decoration: underline;
+}
+
+.contato > a {
+    color: white;
+    text-decoration: none;
+}
+
+.redes > a {
+    display: block;
+    padding: 10px 30px;
+    color: white;
+    text-decoration: none;
+}
+
+.redes > a:hover {
+    text-decoration: underline;
+}
+
+#lacoste {
+    font-size: 140px;
+    color: white;
+    width: 1920px;
+    text-align: center;
+    height: 400px;
+    background-color: var(--verde);
+}
+
+#endereco {
+    border-top: 1px solid white;
+    background-color: var(--verde);
+}
+
+#divEndereco{
+    padding: 10px;
+    color: white;
+    font-size: 12px;
+    width: 700px;
+    position: relative;
+    left: 50%;
+    text-align: justify;
+}
+
+#bottom {
+    display: grid;
+    grid-template-columns: 1200px 400px 150px ;
+    width: 1750px;
+    margin: auto;
+    height: 80px;
+}
+
+.bottom1{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.bottom1 > a {
+    text-decoration: none;
+    color: var(--verde);
+    padding: 0px 10px;
+}
+
+.bottom1 > a:hover {
+    text-decoration: underline;
+}
+
+.bottom3{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    color: var(--verde);
+}
+
+.bottom3 > p {
+    color: var(--verde);
+    text-decoration: underline;
+    padding-left: 10px;
+}
+
+/* MEDIA PARA TELEFONE */
+
+@media (max-width: 700px){
+
+    nav {
+        display: none;
+    }
+
+    #tipos {
+        display: grid;
+        grid-template-columns: repeat(6, 200px);
+        width: 375px;
+        height: 206px;
+
+        overflow-x: scroll;
+    }
+
+    #tipos::-webkit-scrollbar {
+        display: none;
+    }
+
+    .tipos > img {
+        width: 250px;
+        height: 200px;
+        background-position: center;
+    }
+
+    .tipos > a {
+        width: 200px;
+        height: 100px;
+
+        padding-top: 100px;
+
+    }
+
+    #poloNav {
+        width: 250px;
+    }
+
+    #polos {
+        width: 300px;
+    }
+
+    #vitrine {
+        margin: auto;
+        width: 370px;
+        height: 1220px;
+        display: grid;
+        grid-template-columns: repeat(2, 175px);
+    }
+
+    .produto {
+        width: 175px;
+        height: 245px;
+
+        padding: 5px;
+    }
+
+    .produto > a {
+        width: 175px;
+        height: 175px;
+    }
+
+    .produto > a > .foto {
+        width: 175px;
+        height: 175px;
+    
+        overflow: hidden;
+    
+    }
+
+    .foto {
+        background-size: 175px;
+        width: 175px;
+        height: 175px;
+
+        background-repeat: no-repeat;
+    }
+
+    .etiqueta {
+        width: 175px;
+        height: 50px;
+        
+        font-size: 14px;
+        padding-left: 5px;
+        color: var(--verde);
+    
+        display: flex;
+        align-items: center;
+        justify-content: left;
+    
+        }
+
+    .preco {
+        width: 175px;
+        height: 20px;
+
+        font-size: 14px;
+        padding-left: 5px;
+        color: var(--verde);
+    
+        display: flex;
+        align-items: center;
+        justify-content: left;
+    }
+
+    #infoLacoste {
+        margin: auto;
+        padding: 0px;
+    
+        width: 250px;
+        height: 300px;
+        overflow-y: scroll;
+    
+        color: var(--verde);
+    }
+
+    #infoLacoste::-webkit-scrollbar {
+        display: none;
+    }
+    
+    #infoLacoste > h1 {
+        text-align: center;
+        font-size: 20px;
+    }
+    
+    #infoLacoste > p {
+        text-align: center;
+        font-size: 13px;
+    }
+    
+    #infoLacoste > p > a {
+        color: var(--verde);
+    }
+
+    footer {
+        width: 100vw;
+        height: 960px;
+    
+        background-color: var(--verde);
+    }
+    
+    #gridFooter {
+        width: 300px;
+        height: 250px;
+        margin: auto;
+        display: grid;
+        grid-template-columns: repeat(2, 150px);
+    
+    
+    }
+    
+    .footerTop {
+        width: 150px;
+        display: block;
+        margin: auto;
+    }
+    
+    .footerTop > img {
+        display: block;
+        margin: auto;
+    }
+    
+    .footerTop > p {
+        color: white;
+        text-align: center;
+    }
+
+    #gridMiddle {
+        width: 374px;
+        height: 340px;
+        display: grid;
+        grid-template-columns: 374px 1320px;
+        border: 1px solid white;
+    
+    }
+    
+    #clubLacoste {
+        width: 374px;
+        height: 340px;
+    }
+    
+    #club {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border-right: 1px solid white;
+    
+        height: 150px;
+    
+    }
+    
+    #club > p {
+        color: white;
+        padding: 15px;
+        font-size: 14px;
+    }
+    
+    #email {
+        display: grid;
+        grid-template-columns: 200px 400px;
+        height: 120px;
+        border: 1px solid white;
+    }
+    
+    #emailText > p {
+        color: white;
+        font-size: 20px;
+    
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    
+        width: 200px;
+        height: 100px;
+    
+    }
+    
+    #emailButton {
+        display: inline-flex;
+        border-left: 1px solid white;
+    }
+    
+    #emailButton > label {
+        top: 50%;
+        left: -80%;
+        transform: translate(-30%, -10%);
+        position: relative;
+        color: gray;
+    }
+    
+    #idEmail {
+        height: 95px;
+        width: 350px;
+        background-color: var(--verde);
+        border: none;
+    }
+    
+    #inscreverse > button{
+        width: 375px;
+        height: 70px;
+    }
+
+    #lacoste {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 40px;
+        color: white;
+        width: 375px;
+        height: 200px;
+        background-color: var(--verde);
+    }
+    
+    #endereco {
+        width: 250px;
+        border-top: 1px solid white;
+        background-color: var(--verde);
+    }
+    
+    #divEndereco{
+        margin: auto;
+        color: white;
+        font-size: 8px;
+        width: 375px;
+        left: -5%;
+        text-align: justify;
+    }
+    
+    #bottom {
+        display: grid;
+        grid-template-columns: repeat(3, 125px);
+        width: 375px;
+        height: 80px;
+        background-color: white;
+    }
+    
+    .bottom1{
+        display: flex;
+        align-items: center;
+        justify-content: center;
+
+        margin: auto;
+        width: 100px;
+    }
+    
+    .bottom1 > a {
+        font-size: 10px;
+        text-decoration: none;
+        color: var(--verde);
+        padding: 0px 5px;
+    }
+    
+    .bottom1 > a:hover {
+        text-decoration: underline;
+    }
+
+    .bottom2 {
+        width: 15px;
+        height: 20px;
+    }
+    
+    .bottom3{
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    
+        color: var(--verde);
+    }
+    
+    .bottom3 > p {
+        color: var(--verde);
+        text-decoration: underline;
+        padding-left: 10px;
+    }
+
+}
