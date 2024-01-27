@@ -1,0 +1,1 @@
+import{shipmentStationsInit as t}from"../../framework/components/shipment-stations.js";import{sendEvent as o}from"../../framework/base/event-tracker.js";Lacoste.tracking={sendEvent:o};t();

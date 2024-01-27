@@ -1,0 +1,531 @@
+$.ns('Lacoste.capAdresseCheckAndSuggestModule');
+
+Lacoste.capAdresseCheckAndSuggestModule = {
+
+    keepListen: true,
+    serviceIsAvailable: true,
+
+    // Configuration
+    configuration: null,
+    isDisabled: true,
+    isPopinConfiguration: false,
+    isZipCodeConfiguration: false,
+
+    initAccountCityModule: function() {
+        Lacoste.capAdresseCheckAndSuggestModule.callAjaxMyAccountWithZipCodeForCityModule($('#editMyAddress').find('input[name=\'sa-zip-code\']'));
+        Lacoste.capAdresseCheckAndSuggestModule.callAjaxMyAccountWithZipCodeForCityModule($('#editMyAddress').find('input[name=\'sa-town\']'));
+        Lacoste.capAdresseCheckAndSuggestModule.bindSelectMyAccountAddressCityModule();
+    },
+
+    initAccountZipCodeModule: function() {
+        Lacoste.capAdresseCheckAndSuggestModule.bindCallAjaxMyAccountWithZipCodeModule();
+        Lacoste.capAdresseCheckAndSuggestModule.bindSelectAddressMyAccountZipCodeModule();
+        Lacoste.capAdresseCheckAndSuggestModule.bindEditAddressMyAccountZipCodeManually();
+    },
+
+    initCheckoutCityModule: function() {
+        Lacoste.capAdresseCheckAndSuggestModule.callAjaxWithZipCodeForCityModule($('#checkout-shipping-form').find('input[name=\'zipCode\']'));
+        Lacoste.capAdresseCheckAndSuggestModule.callAjaxWithZipCodeForCityModule($('#checkout-shipping-form').find('input[name=\'city\']'));
+        Lacoste.capAdresseCheckAndSuggestModule.callAjaxWithZipCodeForCityModule($('#checkout-billing-form').find('input[name=\'zipCode\']'));
+        Lacoste.capAdresseCheckAndSuggestModule.callAjaxWithZipCodeForCityModule($('#checkout-billing-form').find('input[name=\'city\']'));
+        Lacoste.capAdresseCheckAndSuggestModule.bindSelectAddressCityModule();
+    },
+
+    initCheckoutZipCodeModule: function() {
+        Lacoste.capAdresseCheckAndSuggestModule.bindCallAjaxWithZipCodemodule();
+        Lacoste.capAdresseCheckAndSuggestModule.bindSelectAddressZipCodeModule();
+        Lacoste.capAdresseCheckAndSuggestModule.bindEditAddressZipCodeManually();
+    },
+
+    // City Module :
+
+    callAjaxMyAccountWithZipCodeForCityModule: function($elmt) {
+        $($elmt.selector).on('keyup focus', function(e) {
+
+            Lacoste.capAdresseCheckAndSuggestModule.detectTabAndClean(e);
+            if (Lacoste.capAdresseCheckAndSuggestModule.serviceIsAvailable) {
+                Lacoste.capAdresseCheckAndSuggestModule.detectAndCleanEmptyInputField($elmt, 'sa-town', 'sa-zip-code');
+            }
+
+            if ($elmt.length > 0 && $elmt.val().length > 2) {
+                $.ajax({
+                    type: 'GET',
+                    url: Lacoste.urls.CAPADRESSE.REQUESTCAPADRESSECALL,
+                    data: {inputOutput: $elmt.val()},
+                    datatype: 'html',
+                    success: function(data) {
+                        if (data && data.serviceCall && data.serviceCall.address && data.serviceCall.address.length > 0 && data.tpl) {
+                            Lacoste.capAdresseCheckAndSuggestModule.serviceIsAvailable = true;
+                            Lacoste.capAdresseCheckAndSuggestModule.keepListen = true;
+                            $elmt.closest('div').find('.address-module').addClass('is-active');
+                            $elmt.closest('div.form-item').find('.address-module').html(data.tpl);
+                            if ($('input[name=needCallValidationAddress]').val() === 'false') {
+                                $('input[name=needCallValidationAddress]').val(true);
+                            }
+                        } else if (data && data.error) {
+                            Lacoste.capAdresseCheckAndSuggestModule.serviceIsAvailable = false;
+                            Lacoste.capAdresseCheckAndSuggestModule.keepListen = false;
+                        }
+                    }
+                });
+            } else {
+                Lacoste.capAdresseCheckAndSuggestModule.cleanAddressModuleWrapper($elmt.closest('div.form-item').find('.address-module-wrapper'), $elmt.closest('div.form-item').find('.address-module'));
+            }
+        });
+
+        $(document).on('blur', $elmt.selector, function(e) {
+            if ($('.address-module').hasClass('is-active') && Lacoste.capAdresseCheckAndSuggestModule.keepListen) {
+
+                var $elmtSelected = $(this).closest('div.form-item').find('.address-module-list li').first();
+                var $form = $(this).closest('form');
+
+                if ($elmtSelected.length > 0) {
+                    Lacoste.capAdresseCheckAndSuggestModule.bindSelectedAccountValueOnField($elmtSelected, $form);
+                    $form.find('input[name=sa-phone]').focus();
+                }
+
+                Lacoste.capAdresseCheckAndSuggestModule.cleanAddressModuleWrapper($elmt.closest('div.form-item').find('.address-module-wrapper'), $elmt.closest('div.form-item').find('.address-module'));
+                Lacoste.capAdresseCheckAndSuggestModule.keepListen = true;
+
+            } else if (!($('.address-module').hasClass('is-active')) && Lacoste.capAdresseCheckAndSuggestModule.keepListen) {
+
+                var $elmtSelected = $(this).closest('div.form-item').find('.address-module-list li').first();
+                var $form = $(this).closest('form');
+
+                Lacoste.capAdresseCheckAndSuggestModule.cleanAddressModuleWrapper($elmt.closest('div.form-item').find('.address-module-wrapper'), $elmt.closest('div.form-item').find('.address-module'));
+                Lacoste.capAdresseCheckAndSuggestModule.emptyAccountValueOnField($elmtSelected, $form);
+            } else {
+                Lacoste.capAdresseCheckAndSuggestModule.keepListen = true;
+            }
+
+        });
+
+    },
+
+    bindSelectMyAccountAddressCityModule: function() {
+
+        var handler = function() {
+            var $this = $(this);
+            var $form = $this.closest('form');
+            Lacoste.capAdresseCheckAndSuggestModule.bindSelectedAccountValueOnField($this, $form);
+            $form.find('input[name=sa-phone]').focus();
+            Lacoste.capAdresseCheckAndSuggestModule.cleanAddressModuleWrapper($('.address-module-wrapper'), $('.address-module'));
+        };
+
+        $(document).off('mousedown', '.address-module-item');
+        $(document).on('mousedown', '.address-module-item', handler);
+
+    },
+
+    bindSelectedAccountValueOnField: function($selectedElmt, $form) {
+        var selectedItem = JSON.parse($selectedElmt.attr('data-json'));
+        var city = selectedItem.city;
+        var streetTwo = $form.find('input[name=sa-complementary-information]');
+        if (selectedItem.parentCity !== undefined) {
+            if (streetTwo.val().length + city.length <= 37) { // -1 to maxlength for space
+                if ($form.find('input[name=cap-street2]').val().length > 0) { // if already filled by cap address
+                    streetTwo.val(streetTwo.val().replace($form.find('input[name=cap-street2]').val(), city));
+                    streetTwo.addClass('is-filled');
+                } else {
+                    streetTwo.val(streetTwo.val() + ' ' + city);
+                    streetTwo.addClass('is-filled');
+                }
+                $form.find('input[name=cap-street2]').val(city);
+                streetTwo.addClass('is-filled');
+            }
+            city = selectedItem.parentCity;
+        }
+
+        $form.find('input[name=sa-town]').val(city);
+        $form.find('input[name=sa-town]').addClass('is-filled');
+        $form.find('input[name=sa-zip-code]').val(selectedItem.zipCode);
+        $form.find('input[name=sa-zip-code]').addClass('is-filled');
+
+        var $zipcodeElmt = $form.find('input[name=\'sa-zip-code\']');
+        $zipcodeElmt.closest('div').find('span.error').hide();
+        $zipcodeElmt.removeClass('error');
+
+        var $cityElmt = $form.find('input[name=\'sa-town\']');
+        $cityElmt.closest('div').find('span.error').hide();
+        $cityElmt.removeClass('error');
+
+        Lacoste.capAdresseCheckAndSuggestModule.keepListen = false;
+    },
+
+    emptyAccountValueOnField: function($selectedElmt, $form) {
+        $form.find('input[name=sa-town]').val('');
+        $form.find('input[name=sa-town]').removeClass('is-filled');
+        $form.find('input[name=sa-zip-code]').val('');
+        $form.find('input[name=sa-zip-code]').removeClass('is-filled');
+
+        var $zipcodeElmt = $form.find('input[name=\'sa-zip-code\']');
+        $zipcodeElmt.closest('div').find('span.error').hide();
+        $zipcodeElmt.removeClass('error');
+
+        var $cityElmt = $form.find('input[name=\'sa-town\']');
+        $cityElmt.closest('div').find('span.error').hide();
+        $cityElmt.removeClass('error');
+    },
+
+    callAjaxWithZipCodeForCityModule: function($elmt) {
+        $(document).on('keyup focus', $elmt.selector, function(e) {
+
+            Lacoste.capAdresseCheckAndSuggestModule.detectTabAndClean(e);
+            if (Lacoste.capAdresseCheckAndSuggestModule.serviceIsAvailable) {
+                Lacoste.capAdresseCheckAndSuggestModule.detectAndCleanEmptyInputField($elmt, 'city', 'zipCode');
+            }
+
+            if ($elmt.val().length > 2) {
+                $.ajax({
+                    type: 'GET',
+                    url: Lacoste.urls.CAPADRESSE.REQUESTCAPADRESSECALL,
+                    data: {inputOutput: $elmt.val()},
+                    datatype: 'html',
+                    success: function(data) {
+                        if (data && data.serviceCall && data.serviceCall.address && data.serviceCall.address.length > 0 && data.tpl) {
+                            Lacoste.capAdresseCheckAndSuggestModule.serviceIsAvailable = true;
+                            Lacoste.capAdresseCheckAndSuggestModule.keepListen = true;
+                            var $addressModule = $elmt.parent().find('.address-module');
+                            $addressModule.addClass('is-active');
+                            $addressModule.html(data.tpl);
+                            if ($('input[name=needCallValidationAddress]').val() === 'false') {
+                                $('input[name=needCallValidationAddress]').val(true);
+                            }
+                        } else if (data && data.error) {
+                            Lacoste.capAdresseCheckAndSuggestModule.serviceIsAvailable = false;
+                            Lacoste.capAdresseCheckAndSuggestModule.keepListen = false;
+                        }
+                    }
+                });
+            } else {
+                Lacoste.capAdresseCheckAndSuggestModule.cleanAddressModuleWrapper($elmt.closest('label').find('.address-module-wrapper'), $elmt.closest('label').find('.address-module'));
+            }
+        });
+
+        $(document).on('blur', $elmt.selector, function(e) {
+            if ($('.address-module').hasClass('is-active') && Lacoste.capAdresseCheckAndSuggestModule.keepListen) {
+                var $elmtSelected = $(this).closest('label').find('.address-module-list li').first();
+                var $form = $(this).closest('form');
+
+                if ($elmtSelected.length > 0) {
+                    Lacoste.capAdresseCheckAndSuggestModule.bindSelectedValueOnField($elmtSelected, $form);
+                    if (!$form.hasClass('checkout-billing-form')) {
+                        $('.billing-address-wrapper input[type=checkbox]').focus();
+                    } else {
+                        $form.find('input[name=phone]').focus();
+                    }
+                }
+
+                Lacoste.capAdresseCheckAndSuggestModule.cleanAddressModuleWrapper($elmt.closest('label').find('.address-module-wrapper'), $elmt.closest('label').find('.address-module'));
+                Lacoste.capAdresseCheckAndSuggestModule.keepListen = true;
+
+            } else if (!($('.address-module').hasClass('is-active')) && Lacoste.capAdresseCheckAndSuggestModule.keepListen) {
+                var $elmtSelected = $(this).closest('label').find('.address-module-list li').first();
+                var $form = $(this).closest('form');
+                Lacoste.capAdresseCheckAndSuggestModule.cleanAddressModuleWrapper($elmt.closest('label').find('.address-module-wrapper'), $elmt.closest('label').find('.address-module'));
+                Lacoste.capAdresseCheckAndSuggestModule.emptyValueOnField($elmtSelected, $form);
+            } else {
+                Lacoste.capAdresseCheckAndSuggestModule.keepListen = true;
+            }
+        });
+    },
+
+    bindSelectAddressCityModule: function() {
+        $(document).on('mousedown', '.address-module', function(e) {
+            var $selectedItem = $(e.target).closest('.address-module-item');
+            if ($selectedItem && !$(e.target).hasClass('address-module')) {
+                var $form = $selectedItem.closest('form');
+                Lacoste.capAdresseCheckAndSuggestModule.bindSelectedValueOnField($selectedItem, $form);
+                if (!$form.hasClass('checkout-billing-form')) {
+                    $('.billing-address-wrapper input[type=checkbox]').focus();
+                } else {
+                    $form.find('input[name=phone]').focus();
+                }
+                Lacoste.capAdresseCheckAndSuggestModule.cleanAddressModuleWrapper($('.address-module-wrapper'), $('.address-module'));
+            } else {
+                Lacoste.capAdresseCheckAndSuggestModule.keepListen = false;
+            }
+        });
+
+        $(document).on('mouseup', '.address-module', function(e) {
+            setTimeout(function() {
+                var $field = $(e.currentTarget).closest('.field-wrapper').find('.js-field');
+                $field.focus();
+            }, 0);
+        });
+    },
+
+    bindSelectedValueOnField: function($selectedElmt, $form) {
+        var selectedItem = JSON.parse($selectedElmt.attr('data-json'));
+        var city = selectedItem.city;
+        var streetTwo = $form.find('input[name=street2]');
+        if (selectedItem.parentCity !== undefined) {
+            if (streetTwo.val().length + city.length <= 37) { // -1 to maxlength for space
+                if ($form.find('input[name=cap-street2]').val().length > 0) { // if already filled by cap address
+                    streetTwo.val(streetTwo.val().replace($form.find('input[name=cap-street2]').val(), city));
+                    streetTwo.addClass('is-filled');
+                } else {
+                    streetTwo.val(streetTwo.val() + ' ' + city);
+                    streetTwo.addClass('is-filled');
+                }
+                $form.find('input[name=cap-street2]').val(city);
+                streetTwo.addClass('is-filled');
+            }
+            city = selectedItem.parentCity;
+        }
+
+        $form.find('input[name=city]').val(city);
+        $form.find('input[name=city]').addClass('is-filled');
+        $form.find('input[name=zipCode]').val(selectedItem.zipCode);
+        $form.find('input[name=zipCode]').addClass('is-filled');
+        Lacoste.capAdresseCheckAndSuggestModule.keepListen = false;
+    },
+
+    emptyValueOnField: function($selectedElmt, $form) {
+        $form.find('input[name=city]').val('');
+        $form.find('input[name=city]').removeClass('is-filled');
+        $form.find('input[name=zipCode]').val('');
+        $form.find('input[name=zipCode]').removeClass('is-filled');
+    },
+
+    // ZipCode Module functions :
+
+    bindCallAjaxWithZipCodemodule: function() {
+        $(document).on('click', '.js-zipcode-module', function(e) {
+
+            e.preventDefault();
+            var $currentElmt = $(this);
+            var zipCode = $currentElmt.closest('div').find('.zipcode-field').val();
+            var errors = [];
+            Lacoste.addressbook.formValidator.validateBlockedZipCode(errors, zipCode, '', '');
+            if (errors.length > 0) {
+                errors = [{input: 'zipCodeSearch', error: $currentElmt.closest('div').find('.zipcode-field').data('error-wrong')}];
+                Lacoste.addressbook.formErrors.showErrors(errors, $currentElmt.closest('form'));
+            } else {
+                $.ajax({
+                    type: 'GET',
+                    url: Lacoste.urls.CAPADRESSE.REQUESTCAPADRESSECALL,
+                    data: {inputOutput: zipCode},
+                    datatype: 'html',
+                    success: function(data) {
+                        if (data && data.serviceCall && data.tpl) {
+                            $currentElmt.closest('form').find('.js-zipcode-module-addresses-result').html(data.tpl);
+                            if ($('input[name=needCallValidationAddress]').val() === 'false') {
+                                $('input[name=needCallValidationAddress]').val(true);
+                            }
+                        } else if (data && data.serviceCall && data.serviceCall.error) {
+                            errors = [{input: 'zipCodeSearch', error: $currentElmt.closest('div').find('.zipcode-field').data('error-wrong')}];
+                            Lacoste.addressbook.formErrors.showErrors(errors, $currentElmt.closest('form'));
+                        } else if (data && data.error) {
+                            errors = [{input: 'zipCodeSearch', error: $currentElmt.closest('div').find('.zipcode-field').data('error-service')}];
+                            Lacoste.addressbook.formErrors.showErrors(errors, $currentElmt.closest('form'));
+                        }
+                    }
+                });
+            }
+        });
+    },
+
+    checkAndReplaceUnwantedChar: function(element) {
+        var unwantedChar = /[|&\"]/g;
+
+        $.each(element.data(), function(key, value) {
+            if (value && value.match(unwantedChar)) {
+                value = value.replace(unwantedChar, '');
+            }
+            element.data(key, value);
+        });
+    },
+
+    bindSelectAddressZipCodeModule: function() {
+        $(document).on('change', '.js-zipcode-module-zipcode-address', function() {
+            var $this = $(this);
+            var $optionSelect = $this.find('option:selected');
+            var $form = $this.closest('form');
+
+            if ($optionSelect) {
+                Lacoste.capAdresseCheckAndSuggestModule.checkAndReplaceUnwantedChar($optionSelect);
+
+                if ($optionSelect.data('street') !== null && $optionSelect.data('street').length > 1) {
+                    $form.find('input[name=street1]').val($optionSelect.data('street')).attr('disabled', 'disabled').addClass('is-filled');
+                }
+                if (!Lacoste.siteprefs.ADDRESSSUGGEST_STREET2_DISABLED) {
+                    if ($optionSelect.data('street2') !== null) {
+                        $form.find('input[name=street2]').val($optionSelect.data('street2')).addClass('is-filled');
+                    }
+                }
+
+                $form.find('input[name=zipCode]').not('.zipcode-field').val($optionSelect.data('zipcode')).attr('disabled', 'disabled').addClass('is-filled');
+                $form.find('input[name=city]').val($optionSelect.data('city')).attr('disabled', 'disabled').addClass('is-filled');
+                if ($form.find('input[name=streetnumber]').length > 0 && $optionSelect.data('streetnumber') !== undefined) {
+                    $form.find('input[name=streetnumber]').val($optionSelect.data('streetnumber')).addClass('is-filled');
+                }
+                if ($form.find('input[name=county]').length > 0 && $optionSelect.data('county')) {
+                    var truncatedCountyName = $optionSelect.data('county');
+                    var truncatingValue = Regex.county[Lacoste.siteprefs.ISO_COUNTRY_CODE.toLowerCase()] || 25;
+                    truncatedCountyName = truncatedCountyName.replace(/[()]/g, '').substr(0, truncatingValue); /// Crop the county name to be 25 chars to conform with input field max-length=25 and remove parantheses
+                    $form.find('input[name=county]').val(truncatedCountyName).attr('readonly', 'readonly').addClass('is-filled');
+                }
+                if ($form.find('select[name=state]').length > 0) {
+                    $form.find('select[name=state]').val($optionSelect.data('state')).attr('disabled', 'disabled').addClass('is-filled').change();
+                }
+
+                Lacoste.capAdresseCheckAndSuggestModule.activateAddressForm($form.find('.shipment-zipcode-module-selected-address-wrapper'));
+            }
+        });
+    },
+
+    bindEditAddressZipCodeManually: function() {
+        $(document).on('click', '.js-address-entermanually', function(e) {
+            e.preventDefault();
+
+            var $this = $(this);
+            var $form = $this.closest('form');
+
+            $form.find('input[name=street1]').removeAttr('disabled');
+            $form.find('input[name=street2]').removeAttr('disabled');
+            $form.find('input[name=zipCode]').removeAttr('disabled');
+            $form.find('input[name=city]').removeAttr('disabled');
+            $form.find('input[name=county]').removeAttr('readonly');
+            $form.find('select[name=state]').removeAttr('disabled');
+
+            Lacoste.capAdresseCheckAndSuggestModule.activateAddressForm($form.find('.shipment-zipcode-module-selected-address-wrapper'));
+
+            Lacoste.checkoutinput.clearInput($form.find('input.zipcode-field'));
+            Lacoste.checkoutinput.clearForm($form.find('.shipment-zipcode-module-addresses-wrapper'));
+
+        });
+    },
+
+    // My Account ZipCode
+
+    bindCallAjaxMyAccountWithZipCodeModule: function() {
+        $(document).on('click', '.js-zipcode-module', function(e) {
+
+            e.preventDefault();
+            var $currentElmt = $(this);
+
+            $.ajax({
+                type: 'GET',
+                url: Lacoste.urls.CAPADRESSE.REQUESTCAPADRESSECALL,
+                data: {inputOutput: $('.zipcode-field').val()},
+                datatype: 'html',
+                success: function(data) {
+                    if (data && data.serviceCall && data.tpl) {
+                        var $currentForm = $currentElmt.closest('form');
+                        var $wrapper = $currentForm.find('.zipcode-field');
+                        $wrapper.removeClass('error');
+                        $wrapper.closest('div').find('span.error').remove();
+                        $currentElmt.closest('form').find('.js-zipcode-module-addresses-result').html(data.tpl);
+                        if ($('input[name=needCallValidationAddress]').val() === 'false') {
+                            $('input[name=needCallValidationAddress]').val(true);
+                        }
+                    } else if (data && data.serviceCall && data.serviceCall.error) {
+                        var $currentForm = $currentElmt.closest('form');
+                        var $wrapper = $currentForm.find('.zipcode-field');
+                        $wrapper.closest('div').find('span.error').remove();
+                        $wrapper.addClass('error');
+                        $wrapper.closest('div').append('<span class="error">' + $currentForm.find('.zipcode-field').data('error-wrong') + '</span>');
+                    } else if (data && data.error) {
+                        var $currentForm = $currentElmt.closest('form');
+                        var $wrapper = $currentForm.find('.zipcode-field');
+                        $wrapper.closest('div').find('span.error').remove();
+                        $wrapper.addClass('error');
+                        $wrapper.closest('div').append('<span class="error">' + $currentForm.find('.zipcode-field').data('error-service') + '</span>');
+                    }
+                }
+            });
+        });
+    },
+
+    bindSelectAddressMyAccountZipCodeModule: function() {
+        $(document).on('change', '.js-zipcode-module-zipcode-address', function() {
+            var $this = $(this);
+            var $optionSelect = $this.find('option:selected');
+            var $form = $this.closest('form');
+            var $elmt = $form.find('.my-account-zipcode-module-selected-address-wrapper');
+
+            if ($optionSelect) {
+                Lacoste.capAdresseCheckAndSuggestModule.checkAndReplaceUnwantedChar($optionSelect);
+
+                if ($optionSelect.data('street') !== null && $optionSelect.data('street').length > 1) {
+                    $form.find('input[name=sa-number-and-street]').val($optionSelect.data('street')).attr('readonly', 'readonly');
+                }
+                if (Lacoste.siteprefs.ADDRESSSUGGEST_STREET2_DISABLED) {
+                    if ($optionSelect.data('street2') !== null) {
+                        $form.find('input[name=sa-complementary-information]').val($optionSelect.data('street2')).addClass('is-filled');
+                        $form.find('input[name=sa-complementary-information]').attr('readonly', 'readonly');
+                    }
+                }
+                $form.find('input[name=sa-zip-code]').val($optionSelect.data('zipcode')).attr('readonly', 'readonly');
+                $form.find('input[name=sa-town]').val($optionSelect.data('city')).attr('readonly', 'readonly');
+                if ($form.find('input[name=streetnumber]').length > 0) {
+                    $form.find('input[name=streetnumber]').val($optionSelect.data('streetnumber')).addClass('is-filled');
+                }
+                if ($form.find('input[name=county]').length > 0) {
+                    $form.find('input[name=county]').val($optionSelect.data('county')).attr('readonly', 'readonly').addClass('is-filled');
+                }
+                if ($form.find('select[name=sa-state]').length > 0) {
+                    $form.find('select[name=sa-state]').val($optionSelect.data('state')).addClass('is-filled disabled-elmt').change();
+                }
+
+                $elmt.removeClass('my-account-zipcode-module-selected-address-wrapper');
+                $elmt.addClass('my-account-zipcode-module-selected-address-wrapper-active');
+            }
+        });
+    },
+
+    bindEditAddressMyAccountZipCodeManually: function() {
+        $(document).on('click', '.js-address-entermanually', function(e) {
+            e.preventDefault();
+
+            var $this = $(this);
+            var $form = $this.closest('form');
+
+            $form.find('input[name=sa-number-and-street]').removeAttr('readonly');
+            $form.find('input[name=sa-complementary-information]').removeAttr('readonly');
+            $form.find('input[name=sa-zip-code]').removeAttr('readonly');
+            $form.find('input[name=sa-town]').removeAttr('readonly');
+            $form.find('input[name=county]').removeAttr('readonly');
+            $form.find('select[name=sa-state]').removeClass('disabled-elmt');
+
+            Lacoste.capAdresseCheckAndSuggestModule.activateAddressForm($form.find('.my-account-zipcode-module-selected-address-wrapper'));
+
+            Lacoste.checkoutinput.clearInput($form.find('input.zipcode-field'));
+            Lacoste.checkoutinput.clearForm($form.find('.my-account-zipcode-module-addresses-wrapper'));
+
+        });
+    },
+
+    cleanAddressModuleWrapper: function($elmt1, $elmt2) {
+        $elmt1.hide();
+        $elmt2.removeClass('is-active');
+        $elmt2.html('');
+    },
+
+    activateAddressForm: function($elmt) {
+        $elmt.removeClass('my-account-zipcode-module-selected-address-wrapper');
+        $elmt.removeClass('shipment-zipcode-module-selected-address-wrapper');
+        $elmt.addClass('shipment-zipcode-module-selected-address-wrapper-active');
+        $elmt.addClass('my-account-zipcode-module-selected-address-wrapper-active');
+    },
+
+    detectTabAndClean: function(e) {
+        var keyCode = e.keyCode || e.which;
+
+        if (keyCode === 9) {
+            e.preventDefault();
+            Lacoste.capAdresseCheckAndSuggestModule.cleanAddressModuleWrapper($('.address-module-wrapper'), $('.address-module'));
+        }
+    },
+
+    detectAndCleanEmptyInputField: function($elmt, cityElmtName, zipCodeElmltName) {
+        if ($elmt.val().length === 0) {
+            var $form = $elmt.closest('form');
+            $form.find('input[name=' + cityElmtName + ']').val('');
+            $form.find('input[name=' + zipCodeElmltName + ']').val('');
+            Lacoste.capAdresseCheckAndSuggestModule.cleanAddressModuleWrapper($('.address-module-wrapper'), $('.address-module'));
+        }
+    }
+
+};

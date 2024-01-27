@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<!-- saved from url=(0345)https://fledge.us.criteo.com/interest-group?data=BzBMC3xJbC9nZldsRTR5a3JESXJrRlNyYW1nWXNmekhYcm1CZURzQ0E1TkJ4YTNwRldJUXdmbnp4Ym4wZ1Z1UUZKV20veXZ5ek10OWxrQkVaNWIwVk1OdWdLblU0ZldEaHpMTzczNGo4T0tGT2Roa08xeHpIektkWEVkWHM4VTcyMmQ1d1hnbm04RXRyOXQ1QzczTDRtTVh0NllWME1mZ0tXb2lJQlNZQ24rd25kcmVLR2xPQWhvYTlqMzc2dkRMdFhEbEJ5NExuZEljRmxudUdSNnM1MUlhV1RBPT18 -->
+<html lang="en"><head><meta http-equiv="Content-Type" content="text/html; charset=windows-1252">
+    <!-- Chrome origin trial token -->
+    <meta http-equiv="origin-trial" content="AnolOEEMEnMaCvmUcw/eijaA/Ntx4pke43TW8O1+XFxTL7yMSzmBnkPrjQ33sKmqvREEpLQOE72gUMzHLu9KiAoAAABseyJvcmlnaW4iOiJodHRwczovL2NyaXRlby5jb206NDQzIiwiZmVhdHVyZSI6IlByaXZhY3lTYW5kYm94QWRzQVBJcyIsImV4cGlyeSI6MTY5NTE2Nzk5OSwiaXNTdWJkb21haW4iOnRydWV9">
+</head>
+<body>
+
+<script>
+    if (!navigator.joinAdInterestGroup) {
+        console.log("No fledge for you!");
+    } else {
+        var igs = [{"owner":"https://fledge.us.criteo.com","name":"l0k9B3w4bVJqRFJ6N0tnRkZsTTFpUXlhQlZnPT18","priorityVector":{"browserSignals.ageInMinutes":-1,"browserSignals.one":-86400},"biddingLogicURL":"https://fledge.us.criteo.com/simplebid?platform=us","biddingWasmHelperURL":"https://fledge.us.criteo.com/criteo.wasm","trustedBiddingSignalsURL":"https://fledge.us.criteo.com/getvalues","trustedBiddingSignalsKeys":["DuD0k3xJbC9nZldsRTR5a3JESXJrRlNyYW1oWllNd3R1d2FPUGk2L2dmajRVU29rQmMxbU00NzJqSDl0L2l0MDlhTTcvb2Y4VG5TaERRZlU2c3hNWElkNm9VMGZFWGdSK3lWOEs4bG81OGo1K3ZqcGx2cDJFNnZkeHN4bnNxdlovNDNKWFJvS3VXYkxkQ0xWdnVNZzhRUGsrS2gvcXpvRU5FTjh2TXRkWllHSTVSa3M9fA"],"userBiddingSignals":{},"updateURL":"https://fledge.us.criteo.com/interest-group/update?key=-HTu7XxJbC9nZldsRTR5a3JESXJrRlNyYW1oc2dWKzdNSnF2SW0wQWRDV3VwcXhnYUZjTnN0ZjNlcWZHdlJURGhQcUM2Q0tUNVhrZ1k5dUpIL1Y3cVA2YWNySEdzODlSbks5V2owMXVYZnBDSkJVaitEUS8zd0ZjZXluY1AwckszQ1o3VFI1c3pXTEo1bDlTd2JpUzNnWHhBWDRoaXdjZ2s0aVdvY1F4em1DSmtTeUk9fA","ads":[],"adComponents":[],"executionMode":"group-by-origin"}];
+        var expiration = 2592000;
+        for (const ig of igs) {
+            navigator.joinAdInterestGroup(ig, expiration);
+        }
+    }
+
+    async function measureAudienceSize() {
+        // Measuring audience size
+        // Register worklet
+        if((!window?.sharedStorage?.worklet?.addModule) || (!window?.sharedStorage?.run)){
+            return;
+        }
+        await window.sharedStorage.worklet.addModule('');
+
+        // Run audience size measurement operation
+        await window.sharedStorage.run('audience-size-measurement', {
+            data: { bucketKey: BigInt('1886084'), contributionValue: 8192}
+        });
+    }
+
+    //TODO reactivate audience-size-measurement
+    //measureAudienceSize();
+
+</script>
+
+
+</body></html>

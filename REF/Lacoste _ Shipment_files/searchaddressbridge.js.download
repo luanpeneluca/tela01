@@ -1,0 +1,44 @@
+'use strict';
+
+$.ns('Lacoste.searchaddressbridge');
+
+Lacoste.searchaddressbridge = (function($) {
+
+    var init = function(selector) {
+        if ($(selector).data('page') === 'account') {
+            var activeModule = $(selector).data('activemodule');
+
+            switch (activeModule) {
+
+                case 'CACity' :
+                    Lacoste.capAdresseCheckAndSuggestModule.initAccountCityModule();
+                    break;
+
+                case 'CAZipCode' :
+                    Lacoste.capAdresseCheckAndSuggestModule.initAccountZipCodeModule();
+                    break;
+
+            }
+        }
+
+        if ($(selector).data('page') === 'checkout') {
+            var activeModule = $(selector).data('activemodule');
+
+            switch (activeModule) {
+
+                case 'CACity' :
+                    Lacoste.capAdresseCheckAndSuggestModule.initCheckoutCityModule();
+                    break;
+
+                case 'CAZipCode' :
+                    Lacoste.capAdresseCheckAndSuggestModule.initCheckoutZipCodeModule();
+                    break;
+
+            }
+        }
+    };
+
+    return {
+        init: init
+    };
+})(jQuery);

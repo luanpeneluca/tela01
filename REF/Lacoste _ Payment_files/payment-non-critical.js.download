@@ -1,0 +1,1 @@
+import{sendEvent as t}from"../framework/base/event-tracker.js";Lacoste.tracking={sendEvent:t};

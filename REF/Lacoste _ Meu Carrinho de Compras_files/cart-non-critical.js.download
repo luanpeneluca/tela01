@@ -1,0 +1,1 @@
+import{recommendationInit as o}from"../framework/components/recommendation.js";import{sendEvent as m}from"../framework/base/event-tracker.js";o(".js-cart-recommendations");Lacoste.tracking={sendEvent:m};

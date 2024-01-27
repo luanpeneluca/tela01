@@ -1,0 +1,55 @@
+$.ns('Lacoste.paymentbridge');
+
+Lacoste.paymentbridge = {
+    paymentMethods: {
+        CREDIT_CARD: 'CREDIT_CARD',
+        MERCADOPAGO_REDIRECT: 'MERCADOPAGO_REDIRECT',
+        PAYPAL: 'PAYPAL',
+        IDEAL: 'IDEAL',
+        PAYMENT_GIFTCARD: 'GIFT_CERTIFICATE',
+        LOYALTY: 'LOYALTY',
+        CASH_ON_DELIVERY: 'CASH_ON_DELIVERY',
+        COUPONPAYMENT: 'COUPON',
+        BOLETO: 'BOLETO',
+        PIX: 'PIX'
+    },
+
+    validate: function(el, paymentMethod, paymentId, paymentProcessorId, successCallback) {
+        if (paymentMethod === Lacoste.paymentbridge.paymentMethods.CREDIT_CARD) {
+            if (paymentId !== 'GIFTCERT_CREDIT_CARD') {
+                if (paymentProcessorId === 'MERCADOPAGO_CREDIT') {
+                    Lacoste.mpcredit.validate(successCallback);
+                } else {
+                    Lacoste.creditcard.validate(successCallback);
+                }
+            } else {
+                Lacoste.clutch.validate(successCallback);
+            }
+        } else if (paymentMethod === Lacoste.paymentbridge.paymentMethods.MERCADOPAGO_REDIRECT) {
+            Lacoste.mpredirect.validate(successCallback);
+        } else if (paymentMethod === Lacoste.paymentbridge.paymentMethods.PAYPAL) {
+            Lacoste.paypal.validate(successCallback);
+        } else if (paymentMethod === Lacoste.paymentbridge.paymentMethods.IDEAL) {
+            Lacoste.ideal.validate(successCallback);
+        } else if (paymentMethod === Lacoste.payment.paymentMethods.SOFORT) {
+            Lacoste.sofort.validate(successCallback);
+        } else if (paymentMethod === Lacoste.paymentbridge.paymentMethods.PAYMENT_GIFTCARD) {
+            if ($(el).hasClass('gift-certificate-validate')) {
+                successCallback && successCallback();
+                $('#js-payment-method-giftcard-form').submit();
+            }
+        } else if (paymentMethod === Lacoste.payment.paymentMethods.LOYALTY) {
+            Lacoste.loyalty.validate(successCallback);
+        } else if (paymentMethod === Lacoste.paymentbridge.paymentMethods.CASH_ON_DELIVERY) {
+            Lacoste.cashondelivery.validate(successCallback);
+        } else if (paymentMethod === Lacoste.paymentbridge.paymentMethods.COUPONPAYMENT) {
+            Lacoste.couponpayment.validate(successCallback);
+        } else if (paymentMethod === Lacoste.paymentbridge.paymentMethods.BOLETO) {
+            Lacoste.boleto.validate(successCallback);
+        } else if (paymentMethod === Lacoste.paymentbridge.paymentMethods.PIX) {
+            window.pixPaymentValidate(successCallback);
+        } else {
+            console.log('TODO CHECKOUT : Something went wrong');
+        }
+    }
+};
